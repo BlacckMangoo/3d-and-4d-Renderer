@@ -72,7 +72,7 @@ typedef struct
     GLfloat s, t;         // Texture coordinates
     GLuint  rgba;         // Color (four ubytes packed into an uint)
     GLfloat x, y, z;      // Vertex coordinates
-} Vertex;
+} MeshVertex;
 
 
 //========================================================================
@@ -394,8 +394,8 @@ static void particle_engine(double t, float dt)
 static void draw_particles(GLFWwindow* window, double t, float dt)
 {
     int i, particle_count;
-    Vertex vertex_array[BATCH_PARTICLES * PARTICLE_VERTS];
-    Vertex* vptr;
+    MeshVertex vertex_array[BATCH_PARTICLES * PARTICLE_VERTS];
+    MeshVertex* vptr;
     float alpha;
     GLuint rgba;
     Vec3 quad_lower_left, quad_lower_right;
