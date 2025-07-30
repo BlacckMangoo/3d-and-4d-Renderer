@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <resourceManager.h>
+#include <iostream>
 
 
 
@@ -53,11 +54,13 @@ void Mesh::Upload()
 			indices.size() * sizeof(unsigned int),
 			indices.data(),
             GL_STATIC_DRAW);
+        // EBO is automatically bound to VAO when bound while VAO is active
+        std::cout << "Uploaded " << indices.size() << " indices to EBO" << std::endl;
     }
 	SetupAttributes();
 }
 
-void Mesh::Draw()
+void Mesh::DrawMesh()
 {
 
  
@@ -68,6 +71,11 @@ void Mesh::Draw()
 
 	if (useIndices) {
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+		// Check for OpenGL errors
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			std::cerr << "OpenGL error in DrawMesh: " << error << std::endl;
+		}
 	}
 	else {
 		glDrawArrays(GL_TRIANGLES, 0, vertexCount);

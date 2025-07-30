@@ -31,7 +31,7 @@ target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAK
 #target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") # Uncomment this line to setup the ASSETS_PATH macro to the final assets directory when you share the game
 
 
-target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/main.cpp" "src/Renderer/shader.cpp" "src/Renderer/resourceManager.cpp"     "src/Renderer/mesh.cpp" "include/mesh.h" "src/Renderer/camera.cpp" "include/camera.h" "include/utils.h" "include/primitives.h" "src/Renderer/app.cpp" "include/app.h")
+target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/main.cpp" "src/Renderer/shader.cpp" "src/Renderer/resourceManager.cpp"     "src/Renderer/mesh.cpp" "include/mesh.h" "src/Renderer/camera.cpp" "include/camera.h" "include/utils.h" "include/primitives.h" "src/Renderer/app.cpp" "include/app.h"    "include/fourDimensionalMath.h")
 
 
 if(MSVC) # If using the VS compiler...

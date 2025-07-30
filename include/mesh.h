@@ -16,10 +16,14 @@ public:
     Mesh(Primitive primitive);
 
     void Upload();   
-    void Draw();        
+    void DrawMesh();        
     void Clear();      
 
-    ~Mesh();          
+    ~Mesh();
+    
+    // Getters for debugging
+    unsigned int GetVertexCount() const { return vertexCount; }
+    unsigned int GetIndexCount() const { return indexCount; }          
 
 private:
     GLuint VAO = 0, VBO = 0, EBO = 0;
