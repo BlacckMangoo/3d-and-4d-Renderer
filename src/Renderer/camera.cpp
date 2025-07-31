@@ -1,4 +1,4 @@
-#include <camera.h>
+#include <Renderer/camera.h>
 #include <glm/gtc/matrix_transform.hpp>
 
 glm::mat4 Camera::GetProjectionMatrix() const 

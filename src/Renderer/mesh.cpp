@@ -1,7 +1,7 @@
-#include <mesh.h>
+#include <Renderer/mesh.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <resourceManager.h>
+#include <Renderer/resourceManager.h>
 #include <iostream>
 
 
@@ -43,7 +43,7 @@ void Mesh::Upload()
     // Upload vertex data
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER,
-		vertices.size() * sizeof(MeshVertex),
+		vertices.size() * sizeof(glm::vec3),
 		vertices.data(),
         GL_STATIC_DRAW);
 
@@ -105,12 +105,10 @@ void Mesh::Clear() {
 
 void Mesh::SetupAttributes()
 {
-    glEnableVertexAttribArray(0); // Position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
-		(void*)offsetof(MeshVertex, position));
+	// Position
+    glEnableVertexAttribArray(0); 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+	
 
-    glEnableVertexAttribArray(1); // Normal
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex),
-		(void*)offsetof(MeshVertex, normal));
   
 }

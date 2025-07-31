@@ -31,7 +31,7 @@ target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAK
 #target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="./resources/") # Uncomment this line to setup the ASSETS_PATH macro to the final assets directory when you share the game
 
 
-target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/main.cpp" "src/Renderer/shader.cpp" "src/Renderer/resourceManager.cpp"     "src/Renderer/mesh.cpp" "include/mesh.h" "src/Renderer/camera.cpp" "include/camera.h" "include/utils.h" "include/primitives.h" "src/Renderer/app.cpp" "include/app.h"    "include/fourDimensionalMath.h")
+target_sources("${CMAKE_PROJECT_NAME}" PRIVATE ${MY_SOURCES}  "src/main.cpp" "src/Renderer/shader.cpp" "src/Renderer/resourceManager.cpp"     "src/Renderer/mesh.cpp" "include/Renderer/mesh.h" "src/Renderer/camera.cpp" "include/Renderer/camera.h" "include/Renderer/utils.h" "include/Renderer/primitives.h" "src/app.cpp" "include/app.h"      "include/fourDimMath.h" )
 
 
 if(MSVC) # If using the VS compiler...
@@ -46,8 +46,8 @@ if(MSVC) # If using the VS compiler...
 
 endif()
 
+target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
 
 
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw 

@@ -3,9 +3,9 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <shader.h>
-#include  <utils.h>
-
+#include <Renderer/shader.h>
+#include  <Renderer/utils.h>
+#include <glm/glm.hpp>
 
 
 
@@ -31,7 +31,7 @@ private:
     unsigned int indexCount = 0;
     bool useIndices = false;
 
-    std::vector<MeshVertex> vertices; 
+    std::vector<glm::vec3> vertices; 
     std::vector<unsigned int> indices; 
 
     void SetupAttributes();
