@@ -10,12 +10,15 @@
 #include <Renderer/shader.h>
 #include <Renderer/camera.h>
 #include <Renderer/primitives.h>
+
+#include <FourDMath/fourDRotation.h>
 Shader unlitshader; 
+Shader fourDUnlitStereographicShader;
 
-Mesh rectangleMesh(rectanglePrimitive);
-Mesh triangleMesh(trianglePrimitive);
-Mesh cubeMesh(cubePrimitive);
-
+Mesh<glm::vec3> rectangleMesh(rectanglePrimitive);
+Mesh<glm::vec3> triangleMesh(trianglePrimitive);
+Mesh<glm::vec3> cubeMesh(cubePrimitive);
+Mesh<glm::vec4> tesseractMesh(tesseractPrimitive);
 
 Camera camera;
 
@@ -53,13 +56,15 @@ void App::Init()
 	glEnable(GL_DEPTH_TEST);
 	
 	cubeMesh.Upload();
+	tesseractMesh.Upload();
 	
 
 	//Load shaders
 
 	unlitshader = ResourceManager::LoadShader(
 		RESOURCES_PATH "/unlit.vert", RESOURCES_PATH "/unlit.frag", nullptr, "unlitShader");
-
+	fourDUnlitStereographicShader = ResourceManager::LoadShader(
+		RESOURCES_PATH "/stereographicallyproject.vert", RESOURCES_PATH "/unlit.frag", nullptr, "stereographicallyProjectedShader");
 	
 }
 
@@ -70,30 +75,33 @@ void App::Run()
 	{
 
 		float time = glfwGetTime();
-
-	
 		
-	
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Create 4D rotation matrix
+		float angleXY = time * 0.5f;  
+		float angleZW = time * 0.3f;  
+		glm::mat4 rotation4D = Rotation4D::doubleRotation(angleXY, angleZW);
 		
-	
-		unlitshader.Use();
+		//unlitshader.Use();
 		glm::mat4 projection = camera.GetProjectionMatrix();
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, time * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // Rotate around Y-axis
 		model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3));
-		// Set shader uniforms
+		fourDUnlitStereographicShader.Use();
+		fourDUnlitStereographicShader.SetVector3f("uColor", glm::vec3(1.0f, 0.0f, 0.0f));
+		fourDUnlitStereographicShader.SetMatrix4("uProjection", projection);
+		fourDUnlitStereographicShader.SetMatrix4("uRotation4D", rotation4D);
+		fourDUnlitStereographicShader.SetMatrix4("uView", view);
+		fourDUnlitStereographicShader.SetMatrix4("uModel", model);
 
+		
 
-		unlitshader.SetMatrix4("uProjection", projection);
-		unlitshader.SetMatrix4("uView", view);
-		unlitshader.SetMatrix4("uModel", model);
-		unlitshader.SetVector3f("uColor", glm::vec3(1.0f, 0.0f, 0.0f)); // Red
+		
+		tesseractMesh.DrawMesh();
 
-		cubeMesh.DrawMesh();
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
