@@ -175,3 +175,34 @@ Primitive<glm::vec4> tesseractPrimitive = {
         5,7,13, 7,13,15
     }
 };
+
+
+
+Primitive<glm::vec3> inline  CircleGenerator( float radius , int segments )
+{
+    std::vector<glm::vec3> vertices;
+    std::vector<unsigned int> indices;
+
+    for ( int i = 0 ; i < segments ; i++ )
+    {
+        float angleToAdd = 360.0f / static_cast<float>(segments);
+        float angle = angleToAdd * i;
+        vertices.push_back(glm::vec3(radius * cos(angle), radius * sin(angle), 0.0f));
+
+
+    }
+
+    for ( int i = 1 ; i < segments ; i++ )
+    {
+        indices.push_back(0);
+        indices.push_back(i);
+        indices.push_back(i+1);
+    }
+    //last finishing triangle
+    indices.push_back(0);
+    indices.push_back(segments);
+    indices.push_back(1);
+
+
+    return{vertices,indices};
+}
