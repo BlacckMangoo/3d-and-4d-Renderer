@@ -4,7 +4,6 @@
 #include <app.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <vector>
 #include <Renderer/mesh.h>
 #include <Renderer/resourceManager.h>
 #include <Renderer/shader.h>
@@ -15,22 +14,21 @@
 #include <inputManager.h>
 
 
-Shader unlitshader; 
+Shader unlitshader;
+
+
 Shader fourDUnlitStereographicShader;
 Mesh<glm::vec3> rectangleMesh(rectanglePrimitive);
 Mesh<glm::vec3> triangleMesh(trianglePrimitive);
 Mesh<glm::vec3> cubeMesh(cubePrimitive);
 Mesh<glm::vec4> tesseractMesh(tesseractPrimitive);
 Mesh<glm::vec3> circleMesh(CircleGenerator(0.5f, 32));
-Mesh<glm::vec3> torusMesh(GenerateTorus(32,32,0.1f,0.5f ,glm::vec3 {0,0,0}));
+Mesh<glm::vec3> torusMesh(GenerateTorus(32,120,0.1f,0.9f ,glm::vec3 {0,0,0}));
 
 
 Camera camera;
 void App::Init()
 {
-
-
-
 	if (!glfwInit())
 	{
 		std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -55,6 +53,8 @@ void App::Init()
 
 
 	glViewport(0, 0, width, height);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -80,11 +80,8 @@ void App::Run()
 
 	while (!glfwWindowShouldClose(window))
 	{
-
-		InputManager::CheckInput(camera, window);
-
-
 		float time = glfwGetTime();
+		InputManager::CheckInput(camera, window);
 
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -99,6 +96,8 @@ void App::Run()
 		float angleXY = time * 0.5f;
 		float angleZW = time * 0.3f;
 		glm::mat4 rotation4D = Rotation4D::doubleRotation(angleXY, angleZW);
+
+
 
 
 

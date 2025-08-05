@@ -229,7 +229,7 @@ Primitive<glm::vec3> GenerateTorus(int segments, int rings, float innerRadius, f
         {
             float segmentAngle = 2.0f * 3.14 * segment / segments; // Angle around the minor radius
 
-            // Calculate position on the torus
+            // parametric equation of a torus
             float x = centre.x + (outerRadius + innerRadius * cos(segmentAngle)) * cos(ringAngle);
             float y = centre.y + (outerRadius + innerRadius * cos(segmentAngle)) * sin(ringAngle);
             float z = centre.z + innerRadius * sin(segmentAngle);
