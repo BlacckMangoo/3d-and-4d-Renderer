@@ -12,14 +12,11 @@
 #include <Renderer/primitives.h>
 
 #include <FourDMath/fourDRotation.h>
-#include <InputManger.h>
+#include <inputManager.h>
 
 
 Shader unlitshader; 
 Shader fourDUnlitStereographicShader;
-
-
-
 Mesh<glm::vec3> rectangleMesh(rectanglePrimitive);
 Mesh<glm::vec3> triangleMesh(trianglePrimitive);
 Mesh<glm::vec3> cubeMesh(cubePrimitive);
@@ -29,11 +26,10 @@ Mesh<glm::vec3> torusMesh(GenerateTorus(32,32,0.1f,0.5f ,glm::vec3 {0,0,0}));
 
 
 Camera camera;
-
-InputManger input_manger(&camera);
-
 void App::Init()
 {
+
+
 
 	if (!glfwInit())
 	{
@@ -61,6 +57,8 @@ void App::Init()
 	glViewport(0, 0, width, height);
 
 	glEnable(GL_DEPTH_TEST);
+
+	InputManager::SetupMouseInput(window, camera);
 	
 	cubeMesh.Upload();
 	tesseractMesh.Upload();
@@ -82,6 +80,8 @@ void App::Run()
 
 	while (!glfwWindowShouldClose(window))
 	{
+
+		InputManager::CheckInput(camera, window);
 
 
 		float time = glfwGetTime();
@@ -132,7 +132,7 @@ void App::Run()
 
 
 		//handle Input
-		InputManger::CheckInput(camera,window);
+		InputManager::CheckInput(camera,window);
 		
 	}
 
