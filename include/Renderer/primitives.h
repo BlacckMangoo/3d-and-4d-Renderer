@@ -4,7 +4,8 @@
 #include <Renderer/mesh.h>
 #include <glm/glm.hpp>
 #include <type_traits>
-//3D primitive 
+//3D primitive
+#include <iostream>
 
 
 template <typename T>
@@ -16,7 +17,7 @@ struct Primitive {
     std::vector<unsigned int> indices;
 };
 
-Primitive < glm::vec3> rectanglePrimitive = {
+Primitive < glm::vec3> inline  rectanglePrimitive = {
 
     //vertices
     {
@@ -33,7 +34,7 @@ Primitive < glm::vec3> rectanglePrimitive = {
 	2, 3, 0
 } };
 
-Primitive<glm::vec3>  trianglePrimitive = {
+Primitive<glm::vec3> inline   trianglePrimitive = {
 	//vertices 
 	{
          { -0.5f, -0.5f, 0.0f },
@@ -47,7 +48,7 @@ Primitive<glm::vec3>  trianglePrimitive = {
 
 
 
-Primitive <glm::vec3> cubePrimitive = {
+Primitive <glm::vec3> inline  cubePrimitive = {
     // vertices
     {
         // Front face
@@ -105,7 +106,7 @@ Primitive <glm::vec3> cubePrimitive = {
 };
 
 
-Primitive<glm::vec4> tesseractPrimitive = {
+Primitive<glm::vec4> inline  tesseractPrimitive = {
     // Tesseract vertices (4D hypercube) - normalized to unit hypercube
     {
         {-1,-1,-1,-1},  // 0
@@ -178,31 +179,96 @@ Primitive<glm::vec4> tesseractPrimitive = {
 
 
 
-Primitive<glm::vec3> inline  CircleGenerator( float radius , int segments )
+Primitive<glm::vec3> inline CircleGenerator(float radius, int segments, glm::vec3 centre = {0, 0, 0})
 {
     std::vector<glm::vec3> vertices;
     std::vector<unsigned int> indices;
 
-    for ( int i = 0 ; i < segments ; i++ )
+    float angleStep = 360.0f / static_cast<float>(segments);
+
+    // Add center vertex at index 0
+    vertices.push_back(centre);
+
+    // Outer vertices
+    for (int i = 0; i < segments; i++)
     {
-        float angleToAdd = 360.0f / static_cast<float>(segments);
-        float angle = angleToAdd * i;
-        vertices.push_back(glm::vec3(radius * cos(angle), radius * sin(angle), 0.0f));
-
-
+        float angle = glm::radians(angleStep * i);
+        float x = centre.x + radius * cos(angle);
+        float y = centre.y + radius * sin(angle);
+        vertices.emplace_back(x, y, centre.z);
     }
 
-    for ( int i = 1 ; i < segments ; i++ )
+    // Triangles
+    for (int i = 1; i < segments; i++)
     {
         indices.push_back(0);
         indices.push_back(i);
-        indices.push_back(i+1);
+        indices.push_back(i + 1);
     }
-    //last finishing triangle
+
+    // Final triangle (wrap around)
     indices.push_back(0);
     indices.push_back(segments);
     indices.push_back(1);
 
+    return {vertices, indices};
 
-    return{vertices,indices};
 }
+
+Primitive<glm::vec3> GenerateTorus(int segments, int rings, float innerRadius, float outerRadius, glm::vec3 centre = {0,0,0})
+{
+    std::vector<glm::vec3> vertices;
+    std::vector<unsigned int> indices;
+
+    // Generate vertices
+    for (int ring = 0; ring < rings; ring++)
+    {
+        float ringAngle = 2.0f * 3.14 * ring / rings; // Angle around the major radius
+
+        for (int segment = 0; segment < segments; segment++)
+        {
+            float segmentAngle = 2.0f * 3.14 * segment / segments; // Angle around the minor radius
+
+            // Calculate position on the torus
+            float x = centre.x + (outerRadius + innerRadius * cos(segmentAngle)) * cos(ringAngle);
+            float y = centre.y + (outerRadius + innerRadius * cos(segmentAngle)) * sin(ringAngle);
+            float z = centre.z + innerRadius * sin(segmentAngle);
+
+            vertices.emplace_back(x, y, z);
+        }
+    }
+
+    // Generate indices to connect rings
+    for (int ring = 0; ring < rings; ring++)
+    {
+        int nextRing = (ring + 1) % rings; // Wrap around to connect last ring to first
+
+        for (int segment = 0; segment < segments; segment++)
+        {
+            int nextSegment = (segment + 1) % segments; // Wrap around within each ring
+
+            // Current ring vertices
+            int current = ring * segments + segment;
+            int currentNext = ring * segments + nextSegment;
+
+            // Next ring vertices
+            int next = nextRing * segments + segment;
+            int nextNext = nextRing * segments + nextSegment;
+
+            // Create two triangles for each quad
+            // Triangle 1
+            indices.push_back(current);
+            indices.push_back(next);
+            indices.push_back(currentNext);
+
+            // Triangle 2
+            indices.push_back(currentNext);
+            indices.push_back(next);
+            indices.push_back(nextNext);
+        }
+    }
+
+    return {vertices, indices};
+}
+
+
