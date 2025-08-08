@@ -30,9 +30,9 @@ public:
 		glm::vec3 right = glm::vec3(0.0f, 0.0f, 1.0f),
 		float fov = 45.0f,
 		float aspect = 16.0f / 9.0f,
-		float nearClip = 0.1f,
-		float farClip = 100.0f,
-		float cameraMovementSpeed = 0.01f ,
+		float nearClip = 0.01f,
+		float farClip = 1000.0f,
+		float cameraMovementSpeed = 0.9f ,
 		float yaw = -90.0f,
 		float pitch = 0.0f)
 		: position(position), front(front), up(up), fov(fov), aspect(aspect), nearClip(nearClip), farClip(farClip) ,cameraMovementSpeed(cameraMovementSpeed) , yaw(yaw),pitch(pitch),right(right){

@@ -5,6 +5,7 @@ namespace GlobalShaders {
 
     std::shared_ptr<Shader> unlitShader;
     std::shared_ptr<Shader> fourDUnlitStereographicShader;
+    std::shared_ptr<Shader> galaxyShader;
 
     void LoadAll() {
         unlitShader = ResourceManager::LoadShader(
@@ -18,5 +19,11 @@ namespace GlobalShaders {
             RESOURCES_PATH "/unlit.frag",
             nullptr,
             "stereographicallyProjectedShader");
+
+        galaxyShader = ResourceManager::LoadShader(
+        RESOURCES_PATH "/galaxy.vert",
+       RESOURCES_PATH "/unlit.frag",
+       nullptr,
+       "galaxyShader");
     }
 }
