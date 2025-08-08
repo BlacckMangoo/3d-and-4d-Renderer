@@ -6,13 +6,28 @@
 #include <Renderer/shader.h>
 #include <Renderer/primitives.h>
 
-// 3d and 4d meshes templated 
+// 3d and 4d meshes templated
+
+struct Transform
+{
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 projection;
+
+    glm::vec3 position;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+};
+
+
 
 template <typename T>
 class Mesh {
 public:
 
     Mesh(const Primitive<T>& primitive);
+
+
 
 
     void Upload();   

@@ -10,15 +10,15 @@
 std::map<std::string, Shader>       ResourceManager::Shaders;
 
 
-Shader ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name)
+ std::shared_ptr<Shader> ResourceManager::LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name)
 {
     Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
-    return Shaders[name];
+   return std::make_shared<Shader>(Shaders[name]);
 }
 
-Shader ResourceManager::GetShader(std::string name)
+ std::shared_ptr<Shader>  ResourceManager::GetShader(std::string name)
 {
-    return Shaders[name];
+   return std::make_shared<Shader>(Shaders[name]);
 }
 
 

@@ -1,29 +1,12 @@
 
-#pragma once
 #include <iostream>
 #include <app.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <Renderer/mesh.h>
-#include <Renderer/resourceManager.h>
-#include <Renderer/shader.h>
 #include <Renderer/camera.h>
-#include <Renderer/primitives.h>
-
-#include <FourDMath/fourDRotation.h>
 #include <inputManager.h>
-
-
-Shader unlitshader;
-
-
-Shader fourDUnlitStereographicShader;
-Mesh<glm::vec3> rectangleMesh(rectanglePrimitive);
-Mesh<glm::vec3> triangleMesh(trianglePrimitive);
-Mesh<glm::vec3> cubeMesh(cubePrimitive);
-Mesh<glm::vec4> tesseractMesh(tesseractPrimitive);
-Mesh<glm::vec3> circleMesh(CircleGenerator(0.5f, 32));
-Mesh<glm::vec3> torusMesh(GenerateTorus(32,120,0.1f,0.9f ,glm::vec3 {0,0,0}));
+#include <Renderer/shaderList.h>
+#include "timeManger.h"
 
 
 Camera camera;
@@ -44,6 +27,7 @@ void App::Init()
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1); //enables vsync
 	
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -59,20 +43,11 @@ void App::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	InputManager::SetupMouseInput(window, camera);
-	
-	cubeMesh.Upload();
-	tesseractMesh.Upload();
-	circleMesh.Upload();
-	torusMesh.Upload();
-	
+	GlobalShaders::LoadAll();
 
-	//Load shaders
 
-	unlitshader = ResourceManager::LoadShader(
-		RESOURCES_PATH "/unlit.vert", RESOURCES_PATH "/unlit.frag", nullptr, "unlitShader");
-	fourDUnlitStereographicShader = ResourceManager::LoadShader(
-		RESOURCES_PATH "/stereographicallyproject.vert", RESOURCES_PATH "/unlit.frag", nullptr, "stereographicallyProjectedShader");
-	
+	TimeManager::Init();
+
 }
 
 void App::Run()
@@ -80,52 +55,13 @@ void App::Run()
 
 	while (!glfwWindowShouldClose(window))
 	{
-		float time = glfwGetTime();
+		TimeManager::Update();
 		InputManager::CheckInput(camera, window);
 
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-		glm::mat4 projection = camera.GetProjectionMatrix();
-		glm::mat4 view = camera.GetViewMatrix();
-
-
-		//render Tesseract
-
-		float angleXY = time * 0.5f;
-		float angleZW = time * 0.3f;
-		glm::mat4 rotation4D = Rotation4D::doubleRotation(angleXY, angleZW);
-
-
-
-
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.3, 0.3, 0.3));
-		fourDUnlitStereographicShader.Use();
-		fourDUnlitStereographicShader.SetVector3f("uColor", glm::vec3(1.0f, 0.0f, 0.0f));
-		fourDUnlitStereographicShader.SetMatrix4("uProjection", projection);
-		fourDUnlitStereographicShader.SetMatrix4("uRotation4D", rotation4D);
-		fourDUnlitStereographicShader.SetMatrix4("uView", view);
-		fourDUnlitStereographicShader.SetMatrix4("uModel", model);
-		tesseractMesh.DrawMesh();
-
-		unlitshader.Use();
-		unlitshader.SetVector3f("uColor", glm::vec3(1.0f, 0.0f, 0.0f));
-		unlitshader.SetMatrix4("uProjection", projection);
-		unlitshader.SetMatrix4("uView", view);
-
-		glm::mat4 model2 = glm::mat4(1.0f);
-		model2 = glm::translate(model2, glm::vec3(2.0f, 0.0f, 0.0f));
-		model2 = glm::scale(model2, glm::vec3(0.8, 0.8, 0.8));
-		model2 = glm::rotate(model2, glm::radians(39.0f)*time, glm::vec3(1.0f, 1.0f, 1.0f));
-
-		unlitshader.SetMatrix4("uModel", model2);
-
-		torusMesh.DrawMesh();
-		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 

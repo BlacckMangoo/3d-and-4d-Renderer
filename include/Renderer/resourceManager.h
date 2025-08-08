@@ -9,6 +9,7 @@
 
 
 #include "Renderer/shader.h"
+#include <memory>
 
 
 
@@ -18,9 +19,9 @@ public:
     
     static std::map<std::string, Shader>    Shaders;
 
-    static Shader    LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name);
+  static std::shared_ptr<Shader>   LoadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, std::string name);
  
-    static Shader    GetShader(std::string name);
+static std::shared_ptr<Shader>    GetShader(std::string name);
     static void      Clear();
 private:
     ResourceManager() {}
