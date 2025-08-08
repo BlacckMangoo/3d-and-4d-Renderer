@@ -7,9 +7,15 @@
 #include <inputManager.h>
 #include <Renderer/shaderList.h>
 #include "timeManger.h"
+#include <Renderer/galaxy.h>
+#include<memory>
 
 
 Camera camera;
+
+std::unique_ptr<Galaxy> galaxy;
+
+
 void App::Init()
 {
 	if (!glfwInit())
@@ -44,9 +50,11 @@ void App::Init()
 
 	InputManager::SetupMouseInput(window, camera);
 	GlobalShaders::LoadAll();
+	galaxy = std::make_unique<Galaxy>(1000);
 
 
 	TimeManager::Init();
+
 
 }
 
@@ -56,19 +64,21 @@ void App::Run()
 	while (!glfwWindowShouldClose(window))
 	{
 		TimeManager::Update();
+		float dt = TimeManager::DeltaTime();
+
+
 		InputManager::CheckInput(camera, window);
 
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		galaxy->Update(dt);
+		galaxy->Draw(camera);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-
-		//handle Input
-		InputManager::CheckInput(camera,window);
-		
 	}
 
 }

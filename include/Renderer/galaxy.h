@@ -3,6 +3,9 @@
 #include <vector>
 #include <Renderer/shader.h>
 #include <Renderer/camera.h>
+#include <memory>
+
+
 struct Particle
 {
     glm::vec3 position;
@@ -16,11 +19,12 @@ class Galaxy {
 
 public:
 
-    Galaxy( size_t particleCount , Shader& shader) ;
+    Galaxy( int  particleCount) ;
     ~Galaxy();
 
-    void Update(float dt );
+    float galaxyRadius ;
     void Draw(Camera& camera);
+    void Update(float dt);
 
 private:
     size_t particleCount;
@@ -29,7 +33,6 @@ private:
 
     unsigned int vao;
     unsigned int vbo;
-    Shader& shader;
 
 };
 
