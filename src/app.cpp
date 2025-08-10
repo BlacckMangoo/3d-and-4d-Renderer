@@ -33,7 +33,6 @@ void App::Init()
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(1); //enables vsync
 	
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -50,7 +49,7 @@ void App::Init()
 
 	InputManager::SetupMouseInput(window, camera);
 	GlobalShaders::LoadAll();
-	galaxy = std::make_unique<Galaxy>(1000);
+	galaxy = std::make_unique<Galaxy>(2000);
 
 
 	TimeManager::Init();
@@ -64,7 +63,7 @@ void App::Run()
 	while (!glfwWindowShouldClose(window))
 	{
 		TimeManager::Update();
-		float dt = TimeManager::DeltaTime();
+		float dt = TimeManager::DeltaTime()*1.0f;
 
 
 		InputManager::CheckInput(camera, window);

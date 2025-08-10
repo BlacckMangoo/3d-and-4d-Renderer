@@ -22,17 +22,21 @@ public:
     Galaxy( int  particleCount) ;
     ~Galaxy();
 
-    float galaxyRadius ;
+    float  galaxyRadius ;
+    glm::vec3 centre ;
     void Draw(Camera& camera);
     void Update(float dt);
+    glm::vec3 galaxyCenter;
 
 private:
     size_t particleCount;
+
     std::vector<Particle> particles;
 
 
     unsigned int vao;
     unsigned int vbo;
+
 
 };
 
