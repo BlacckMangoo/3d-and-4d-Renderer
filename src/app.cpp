@@ -13,8 +13,6 @@
 
 Camera camera;
 
-std::unique_ptr<Galaxy> galaxy;
-
 
 void App::Init()
 {
@@ -33,7 +31,7 @@ void App::Init()
 	}
 
 	glfwMakeContextCurrent(window);
-	
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cerr << "Failed to initialize GLAD" << std::endl;
@@ -49,7 +47,7 @@ void App::Init()
 
 	InputManager::SetupMouseInput(window, camera);
 	GlobalShaders::LoadAll();
-	galaxy = std::make_unique<Galaxy>(2000);
+
 
 
 	TimeManager::Init();
@@ -70,9 +68,6 @@ void App::Run()
 
 		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		galaxy->Update(dt);
-		galaxy->Draw(camera);
 
 
 		glfwSwapBuffers(window);
